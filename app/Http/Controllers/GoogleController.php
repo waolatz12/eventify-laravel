@@ -64,4 +64,40 @@ class GoogleController extends Controller
             dd($e->getMessage());
         }
     }
+
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'id_token' => 'required|string',
+        ]);
+
+        try {
+            $googleUser = Socialite::driver('google')
+            ->stateless()->userFromToken($request->id_token);
+
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'password' => bcrypt(Str::random(24)),
+                ]
+            );
+
+            // Create Sanctum token
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'token' => $token,
+                'user' => $user,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Invalid Google token',
+                'error' => $e->getMessage()
+            ], 401);
+        }
+    }
+
 }
