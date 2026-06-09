@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
@@ -61,5 +62,28 @@ class AuthController extends Controller
             'data' => $response,
         ], 200);
         // return respond(true, 'Login Successful', $response , 200);
+    }
+
+
+    public function register (Request $request){
+        try {
+            $data = $request->all();
+            $data['password'] = Hash::make('password');
+            $service = new UserService();
+
+            $user = $service->createUser($data);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "User Created Successfully",
+                'data' => $user,
+            ], 201);
+        } catch (\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+
     }
 }

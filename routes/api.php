@@ -9,7 +9,10 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
 Route::get('/auth/google', [App\Http\Controllers\GoogleController::class, 'googleloginpage']);
 Route::get('/auth/google/callback', [App\Http\Controllers\GoogleController::class, 'googleLoginCallback']);
+Route::post('/register',[App\Http\Controllers\API\RegistrationController::class, 'register']);
+Route::post('/user/{user}/events/register',[App\Http\Controllers\EventController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/events/create',[App\Http\Controllers\EventController::class, 'create']);
     Route::get('/profile', function (Request $request) {
         return $request->user()->profile;
     });
@@ -18,3 +21,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Update user profile logic
     });
 });
+
+// Route::middleware('auth:sanctum')->get('/sanctum-test', function () {
+//     return response()->json([
+//         'success' => true
+//     ]);
+// });
