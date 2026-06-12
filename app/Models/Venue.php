@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Venue extends Model
 {
     Use SoftDeletes;
+    protected $guarded = [];
 }
