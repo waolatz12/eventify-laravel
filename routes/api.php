@@ -22,6 +22,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+
+});
+
 // Route::middleware('auth:sanctum')->get('/sanctum-test', function () {
 //     return response()->json([
 //         'success' => true

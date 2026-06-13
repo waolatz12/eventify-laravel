@@ -1,291 +1,587 @@
-# 🎫 Event Management & Ticketing API (Laravel)
+# Eventify - Event Management Platform
 
-A production-style **Event Management and Ticketing System REST API** built with **Laravel (PHP), MySQL, and Eloquent ORM**.
+Eventify is a Laravel-based event management platform designed to streamline the complete event lifecycle, from event planning and attendee registration to ticket sales, check-in, networking, and post-event analytics.
 
-This project demonstrates how to build a **real-world, scalable backend system** using Laravel best practices, including:
-
-* Authentication & Authorization (Laravel Sanctum / JWT)
-* Role-based access control (Admin & User)
-* Event management
-* Ticket purchasing with inventory control
-* Payment gateway integration (Paystack / Stripe / Flutterwave ready)
-* Email notifications
-* Advanced API features (filtering, sorting, pagination)
-* Centralized error handling
-* Clean architecture (Controllers, Services, Requests, Policies)
-
-> This project is built as a portfolio project to demonstrate **backend engineering skills, real-world API design, and Laravel architecture best practices**.
+This project is being built as a portfolio-grade backend application to demonstrate modern Laravel architecture, scalable API design, clean code principles, and real-world software engineering practices.
 
 ---
 
-## 🚀 Features
+## Project Goal
 
-### 👤 Authentication & Authorization
+The goal of Eventify is to provide event organizers with a centralized platform to:
 
-* User registration & login
-* Token-based authentication (Laravel Sanctum or JWT)
-* Role-based access control (Admin / User)
-* Protected API routes
-* Email verification (optional)
+* Create and manage events
+* Sell tickets online
+* Process secure payments
+* Manage speakers and vendors
+* Track attendee registrations
+* Perform event check-ins
+* Collect feedback and analytics
+* Automate notifications and reminders
+
+The project focuses heavily on backend engineering concepts such as dependency injection, service containers, contracts, service providers, event-driven architecture, queues, caching, and API development.
 
 ---
 
-### 🎫 Event Management (Admin)
+## Core Features
+
+### Authentication & Authorization
+
+* User registration
+* Login & logout
+* Password reset
+* Email verification
+* Role-based access control
+* API authentication using Laravel Sanctum
+
+Roles:
+
+* Super Admin
+* Event Organizer
+* Attendee
+* Vendor
+* Speaker
+
+---
+
+### Event Management
+
+Organizers can:
 
 * Create events
 * Update events
-* Delete events
-* Activate / close events
-* Set ticket price, capacity, and event date
-* Upload event banners/images (optional)
+* Publish events
+* Cancel events
+* Set event capacity
+* Define target audience
+* Configure event goals and themes
+
+Event details include:
+
+* Title
+* Description
+* Event goal
+* Theme
+* Event format
+* Event location
+* Start and end dates
+* Capacity
 
 ---
 
-### 🛒 Ticket Booking (Users)
+### Venue Management
 
-* Browse available events
-* Buy tickets for events
-* Prevent overbooking using ticket inventory control
-* View own tickets
-* Cancel tickets (if allowed)
-* Receive email confirmation after purchase
+Supports:
 
----
+* Physical Events
+* Virtual Events
+* Hybrid Events
 
-### 💳 Payment Integration
+Venue information:
 
-* Payment initialization endpoint
-* Payment verification webhook
-* Supports:
-
-  * Paystack
-  * Flutterwave
-  * Stripe (optional)
-* Tickets are only marked as **paid** after successful payment verification
+* Venue name
+* Address
+* Capacity
+* Contact information
 
 ---
 
-### 🧠 Business Logic
+### Speaker Management
 
-* Tickets can only be purchased if:
+Features:
 
-  * Event is active
-  * Tickets are still available
-* Ticket purchase:
-
-  * Locks ticket stock (to prevent race conditions)
-  * Creates a pending ticket record
-  * Initializes payment
-  * On payment success:
-
-    * Marks ticket as paid
-    * Reduces available ticket count
-    * Sends confirmation email
-* Admin can:
-
-  * View all ticket sales
-  * Manage users
-  * Close events
+* Speaker profiles
+* Speaker biographies
+* Profile photo upload
+* Social media links
+* Session assignments
 
 ---
 
-### ⚙️ Advanced API Features
+### Agenda & Session Management
 
-* Filtering
-* Sorting
-* Pagination
-* Field limiting
+Organizers can:
 
-Example:
+* Create event agendas
+* Create multiple sessions
+* Assign speakers
+* Set session capacity
+* Manage session schedules
 
+Examples:
+
+* Keynote Sessions
+* Workshops
+* Breakout Sessions
+* Networking Sessions
+
+---
+
+### Registration & Ticketing
+
+Attendees can:
+
+* Register for events
+* Select ticket packages
+* Receive confirmation
+* Download event tickets
+
+Ticket Types:
+
+* Free
+* Early Bird
+* Standard
+* VIP
+* Premium
+
+Ticket Features:
+
+* QR Codes
+* Unique Ticket Numbers
+* PDF Ticket Generation
+
+---
+
+### Payment Processing
+
+Supported Gateways:
+
+* Paystack
+* Flutterwave
+* Stripe
+
+Features:
+
+* Payment initialization
+* Payment verification
+* Refund support
+* Webhook processing
+
+---
+
+### Event Check-In
+
+Features:
+
+* QR Code scanning
+* Manual attendee check-in
+* Attendance tracking
+* Check-in analytics
+
+---
+
+### Vendor & Exhibitor Management
+
+Vendor Features:
+
+* Vendor registration
+* Company profile management
+* Booth applications
+* Lead tracking
+
+Vendor Information:
+
+* Business name
+* Contact details
+* Industry
+* Website
+* Business description
+
+---
+
+### Networking & Appointments
+
+Features:
+
+* Attendee profiles
+* Vendor profiles
+* Speaker profiles
+* Appointment scheduling
+* Business networking
+
+---
+
+### Polls & Live Engagement
+
+Features:
+
+* Live session polls
+* Audience questions
+* Session voting
+* Real-time engagement
+
+---
+
+### Notifications
+
+Channels:
+
+* Email
+* SMS
+* In-App Notifications
+
+Notification Events:
+
+* Registration confirmation
+* Payment confirmation
+* Event reminders
+* Session reminders
+* Check-in notifications
+
+---
+
+### Feedback & Surveys
+
+Collect:
+
+* Event ratings
+* Session feedback
+* Vendor feedback
+* Suggestions and comments
+
+---
+
+### Analytics Dashboard
+
+Track:
+
+* Ticket sales
+* Event revenue
+* Attendance rates
+* Registration trends
+* Check-in statistics
+* Vendor engagement
+* Feedback scores
+
+---
+
+## Technical Architecture
+
+The application follows a service-oriented architecture using Laravel best practices.
+
+### Controllers
+
+Controllers remain thin and delegate business logic to service classes.
+
+Examples:
+
+```php
+EventController
+RegistrationController
+PaymentController
+VendorController
 ```
-GET /api/events?price[lte]=5000&sort=price,date&page=1&limit=10&fields=title,price,date
+
+### Services
+
+Business logic is handled inside services.
+
+```php
+EventService
+RegistrationService
+PaymentService
+TicketService
+CheckInService
+NotificationService
+AnalyticsService
+VendorService
+```
+
+### Contracts (Interfaces)
+
+Abstractions are defined through contracts.
+
+```php
+PaymentGatewayInterface
+TicketGeneratorInterface
+NotificationInterface
+AnalyticsInterface
+```
+
+### Service Providers
+
+Dependencies are registered using Laravel's service container.
+
+```php
+$this->app->bind(
+    PaymentGatewayInterface::class,
+    PaystackPaymentService::class
+);
+```
+
+### Dependency Injection
+
+Services are injected into controllers through constructor injection.
+
+```php
+public function __construct(
+    private EventService $eventService
+) {}
 ```
 
 ---
 
-## 🏗️ Tech Stack
+## Event-Driven Architecture
 
-* Laravel 10/11+
-* PHP 8.2+
-* MySQL / PostgreSQL
-* Eloquent ORM
-* Laravel Sanctum or JWT
-* Laravel Queues (for emails & background jobs)
-* Laravel Notifications & Mail
-* Redis (optional)
-* Payment Gateways (Paystack / Flutterwave / Stripe)
+The application leverages Laravel Events and Listeners.
 
----
+Events:
 
-## 📁 Project Structure
-
+```php
+RegistrationCompleted
+PaymentSuccessful
+TicketGenerated
+AttendeeCheckedIn
 ```
-app/
-├── Http/
-│   ├── Controllers/
-│   ├── Requests/
-│   ├── Middleware/
-│   └── Resources/
-├── Models/
-├── Services/
-├── Policies/
-├── Notifications/
-├── Mail/
-├── Jobs/
-routes/
-├── api.php
-database/
-├── migrations/
-├── seeders/
+
+Listeners:
+
+```php
+SendConfirmationEmail
+GenerateTicket
+UpdateAnalytics
 ```
 
 ---
 
-## 📚 Data Models
+## Queue System
 
-### User
+Background jobs will be used for:
 
-* id
-* name
-* email
-* password
-* role (admin | user)
-* is_active
-* email_verified_at
+* Email delivery
+* Ticket generation
+* Notifications
+* Analytics processing
 
----
+Technologies:
 
-### Event
-
-* id
-* title
-* description
-* location
-* date
-* price
-* capacity
-* tickets_available
-* status (draft | active | closed)
-
----
-
-### Ticket
-
-* id
-* user_id
-* event_id
-* quantity
-* total_price
-* status (pending | paid | cancelled)
-* payment_reference
-
----
-
-### Payment (Optional Table)
-
-* id
-* user_id
-* ticket_id
-* amount
-* gateway
-* status
-* reference
-* payload
-
----
-
-## 🔐 API Endpoints
-
-### Auth
-
-```
-POST /api/auth/register
-POST /api/auth/login
-GET  /api/auth/me
-POST /api/auth/logout
+```php
+Laravel Queues
+Redis
 ```
 
 ---
 
-### Events
+## Caching Strategy
 
-```
-POST   /api/events            (Admin)
-PATCH  /api/events/{id}       (Admin)
-DELETE /api/events/{id}       (Admin)
+Caching is used for:
 
-GET    /api/events            (Public)
-GET    /api/events/{id}       (Public)
-```
+* Dashboard metrics
+* Event listings
+* Ticket statistics
+* Analytics summaries
 
----
+Examples:
 
-### Tickets
-
-```
-POST /api/tickets             (User)
-GET  /api/tickets/me          (User)
-GET  /api/tickets             (Admin)
-PATCH /api/tickets/{id}/cancel
+```php
+Cache::remember()
+Cache::tags()
 ```
 
 ---
 
-### Payments
+## Security Features
 
-```
-POST /api/payments/initialize
-POST /api/payments/verify
-POST /api/webhooks/paystack   (or flutterwave)
-```
-
----
-
-### Users (Admin)
-
-```
-GET   /api/users
-PATCH /api/users/{id}/deactivate
-```
-
----
-
-## 🛡️ Security Features
-
-* Laravel Policies for authorization
-* Form Request validation
-* Rate limiting
-* SQL injection protection via Eloquent
+* CSRF protection
 * Password hashing
-* Secure payment verification via webhooks
+* API token authentication
+* Email verification
+* Authorization policies
+* Request validation
+* Rate limiting
+* Secure payment verification
 
 ---
 
-## 📧 Email Features
+## API Design
 
-* Registration welcome email
-* Ticket purchase confirmation email
-* Payment success receipt
-* Event cancellation notification (optional)
+The application follows RESTful API principles.
+
+Example Endpoints:
+
+```http
+POST   /api/auth/register
+POST   /api/auth/login
+
+GET    /api/events
+POST   /api/events
+GET    /api/events/{id}
+PUT    /api/events/{id}
+
+POST   /api/registrations
+POST   /api/payments/initialize
+POST   /api/checkins
+```
 
 ---
 
-## 🧪 What This Project Demonstrates
+## Database Design
 
-* Real-world Laravel backend architecture
-* Clean separation of concerns (Controller, Service, Policy)
-* Secure authentication & authorization
-* Complex business logic implementation
-* Payment system integration
-* Scalable API patterns
-* Professional backend engineering practices
+Main Entities:
+
+```text
+users
+roles
+permissions
+
+events
+venues
+sessions
+speakers
+
+tickets
+registrations
+payments
+
+vendors
+booths
+
+appointments
+check_ins
+
+feedback
+
+notifications
+activity_logs
+```
+
+Relationships:
+
+```text
+User -> Event
+Event -> Sessions
+Event -> Tickets
+Event -> Registrations
+Event -> Speakers
+Vendor -> Booths
+Registration -> Payment
+Registration -> Ticket
+```
 
 ---
+
+## Future Enhancements
+
+Planned improvements:
+
+* Multi-tenancy support
+* Event sponsorship management
+* Coupon and discount engine
+* Waitlists for sold-out events
+* Mobile application
+* Real-time chat
+* Event live streaming
+* AI-powered attendee recommendations
+* Advanced reporting exports
+* Public GraphQL API
+
+---
+
+## Testing
+
+Testing strategy includes:
+
+### Unit Tests
+
+* Services
+* Repositories
+* Business rules
+
+### Feature Tests
+
+* Authentication
+* Registration
+* Payments
+* Check-ins
+
+### API Tests
+
+* Endpoint validation
+* Authorization
+* Response structures
+
+Goal:
+
+```bash
+80%+ test coverage
+```
+
+Run tests:
+
+```bash
+php artisan test
+```
+
+---
+
+## Tech Stack
+
+Backend:
+
+* PHP 8+
+* Laravel 12
+* MySQL
+
+Authentication:
+
+* Laravel Sanctum
+
+Authorization:
+
+* Spatie Laravel Permission
+
+Caching:
+
+* Redis
+
+Queues:
+
+* Redis Queue
+
+File Storage:
+
+* Laravel Storage
+
+Payments:
+
+* Paystack
+* Flutterwave
+* Stripe
+
+Testing:
+
+* PHPUnit
+* Pest
+
+Documentation:
+
+* Swagger / OpenAPI
+
+---
+
+## Learning Objectives
+
+This project is primarily designed to strengthen practical backend engineering skills by implementing:
+
+* Service Container
+* Dependency Injection
+* Service Providers
+* Contracts & Interfaces
+* Event-Driven Development
+* Queues & Jobs
+* API Development
+* Payment Integrations
+* Authorization & Security
+* Testing Strategies
+* Scalable Laravel Architecture
+
+---
+
+## License
+
+This project is open-source and available under the MIT License.
 
 ## 👨‍💻 Author
 
 **Olawale Olayinka**
 Backend Developer (Laravel & PHP)
-
-
