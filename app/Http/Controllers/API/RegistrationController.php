@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
+use App\Http\Requests\Registration\StoreRegistrationRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
@@ -15,14 +16,11 @@ class RegistrationController extends Controller
         $this->userService = $userService;
     }
 
-       public function register (Request $request){
+       public function register (StoreRegistrationRequest $request){
         try {
-            $data = $request->all();
-            $data['password'] = Hash::make('password');
-            // $service = new UserService();
 
             //create a user using the UserService dependency
-            $user = $this->userService->createUser($data);
+            $user = $this->userService->createUser($request->validated());
 
             return response()->json([
                 'status' => 'success',
