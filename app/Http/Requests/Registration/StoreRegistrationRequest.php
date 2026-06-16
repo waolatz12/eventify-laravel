@@ -24,7 +24,7 @@ class StoreRegistrationRequest extends FormRequest
         return [
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'phone' => ['required', 'numeric'],
+            'phone' => ['required', 'numeric', 'unique:users,phone'],
             'address' => ['required', 'string'],
             'password' => ['required', 'confirmed'],
         ];

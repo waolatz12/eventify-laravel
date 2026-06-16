@@ -50,6 +50,15 @@ class AuthController extends Controller
             return respond(false, 'Invalid Credentials', $data, 400);
         }
 
+        //check if user has verified their email
+        if (! $user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages([
+                'email' => [
+                    'Please verify your email.'
+                ]
+            ]);
+        }
+        
         $token = $user->createToken('myAppToken')->plainTextToken;
         $response = [
             'user' => $user,

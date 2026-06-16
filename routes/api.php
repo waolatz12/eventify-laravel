@@ -2,6 +2,28 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
+//verify the email
+// Route::get('/email/verify/{id}/{hash}', function (
+//     EmailVerificationRequest $request
+// ) {
+//     $request->fulfill();
+
+//     return response()->json([
+//         'message' => 'Email verified successfully'
+//     ]);
+// })->middleware([
+//     'auth:sanctum',
+//     'signed'
+// ])->name('verification.verify');
+
+Route::get(
+    '/email/verify/{id}/{hash}',
+    [App\Http\Controllers\API\EmailVerificationController::class, 'verify']
+)
+->middleware(['signed'])
+->name('verification.verify');
 
 Route::get('/user', function (Request $request) {
     return $request->user();

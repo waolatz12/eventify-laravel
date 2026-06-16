@@ -75,9 +75,11 @@ use App\Models\ProvinceAccountLastDate;
 use App\Models\BankStatementOpeningBalance;
 
 
-function randomDigits()
-{
-    return Str::random(8);
+if (!function_exists('randomDigits')){
+    function randomDigits()
+    {
+        return Str::random(8);
+    }
 }
 function convertToDate($period)
 {

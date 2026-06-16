@@ -4,23 +4,24 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
+use App\Services\RegistrationService;
 use App\Http\Requests\Registration\StoreRegistrationRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
 {
-    protected UserService $userService;
-    public function __construct(UserService $userService)
+
+    public function __construct(private RegistrationService $registrationService)
     {
-        $this->userService = $userService;
+
     }
 
        public function register (StoreRegistrationRequest $request){
         try {
 
             //create a user using the UserService dependency
-            $user = $this->userService->createUser($request->validated());
+            $user = $this->registrationService->register($request->validated());
 
             return response()->json([
                 'status' => 'success',
