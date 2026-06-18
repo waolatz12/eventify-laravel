@@ -25,6 +25,8 @@ Route::get(
 ->middleware(['signed'])
 ->name('verification.verify');
 
+Route::post('/email/resend', [App\Http\Controllers\API\RegistrationController::class, 'resendVerification']);
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');

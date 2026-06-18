@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ResendVerificationRequest;
 use App\Services\UserService;
 use App\Services\RegistrationService;
 use App\Http\Requests\Registration\StoreRegistrationRequest;
@@ -17,7 +18,7 @@ class RegistrationController extends Controller
 
     }
 
-       public function register (StoreRegistrationRequest $request){
+    public function register (StoreRegistrationRequest $request){
         try {
 
             //create a user using the UserService dependency
@@ -35,6 +36,14 @@ class RegistrationController extends Controller
             ], 500);
         }
 
+    }
+
+    public function resendVerification(ResendVerificationRequest $request)
+    {
+        return $this->registrationService
+            ->resendVerification(
+            $request->validated()['email']
+        );
     }
 
 }

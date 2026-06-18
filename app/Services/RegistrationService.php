@@ -3,6 +3,7 @@
 namespace App\Services;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 
@@ -33,5 +34,36 @@ class RegistrationService
         }
 
         return $user;
+    }
+
+    public function resendVerification(
+        string $email
+    )
+    {
+        $user = User::where(
+            'email',
+            $email
+        )->first();
+
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'email' => ['User not found']
+            ]);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+
+            return response()->json([
+                'message' =>
+                    'Email already verified'
+            ]);
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json([
+            'message' =>
+                'Verification email sent'
+            ]);
     }
 }
