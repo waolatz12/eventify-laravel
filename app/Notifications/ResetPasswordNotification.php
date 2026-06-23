@@ -5,19 +5,19 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Notification;
 
-class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
+class ResetPasswordNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    protected string $token;
+    public function __construct(string $token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -25,30 +25,29 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
      *
      * @return array<int, string>
      */
-    // public function via(object $notifiable): array
-    // {
-    //     return ['mail'];
-    // }
+    public function via(object $notifiable): array
+    {
+        return ['mail'];
+    }
 
     /**
      * Get the mail representation of the notification.
      */
-    // public function toMail(object $notifiable): MailMessage
-    // {
-    //     return (new MailMessage)
-    //         ->line('The introduction to the notification.')
-    //         ->action('Notification Action', url('/'))
-    //         ->line('Thank you for using our application!');
-    // }
-
-    public function toMail($notifiable)
+     public function toMail($notifiable)
     {
-        $url = $this->verificationUrl($notifiable);
+        $frontendUrl = config('app.frontend_url');
+
+        $url = $frontendUrl .
+            '/reset-password?' .
+            http_build_query([
+                'token' => $this->token,
+                'email' => $notifiable->email
+            ]);
 
         return (new MailMessage)
-            ->subject('Verify Your Eventify Account')
+            ->subject('Reset Your Eventify Password')
             ->view(
-                'emails.verify-email',
+                'emails.reset-password',
                 [
                     'user' => $notifiable,
                     'url' => $url

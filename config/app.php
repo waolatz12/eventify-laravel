@@ -105,6 +105,11 @@ return [
         ),
     ],
 
+    'frontend_url' => env(
+        'FRONTEND_URL',
+        'http://localhost:8005'
+    ),
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver

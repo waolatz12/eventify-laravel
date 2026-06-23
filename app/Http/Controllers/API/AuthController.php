@@ -4,7 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Models\User;
+use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -13,68 +17,18 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    // public function login(Request $request)
-    // {
-    //     // Handle user login
-    //     $credentials = $request->only('email', 'password');
-    //     if (Auth::attempt($credentials)) {
-    //         $user = Auth::user();
-    //         $token = $user->createToken('auth_token')->plainTextToken;
-
-    //         return response()->json([
-    //             'access_token' => $token,
-    //             'token_type' => 'Bearer',
-    //         ]);
-    //     }
-    // }
+    public function __construct(private AuthService $authService) {}
 
 
-    public function Login(Request $request)
+    public function logout(Request $request)
     {
-
-        $data = $request->all();
-        // dd($data);
-
-        $validator = Validator::make($data, [
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return respond(false, $validator->errors()->first(), null, 401);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return respond(false, 'Invalid Credentials', $data, 400);
-        }
-
-        //check if user has verified their email
-        if (! $user->hasVerifiedEmail()) {
-            throw ValidationException::withMessages([
-                'email' => [
-                    'Please verify your email.'
-                ]
-            ]);
-        }
-        
-        $token = $user->createToken('myAppToken')->plainTextToken;
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
-
-        return response()->json([
-            'status' => 'success',
-            'message' => "Login Successful",
-            'data' => $response,
-        ], 200);
-        // return respond(true, 'Login Successful', $response , 200);
+        return response()->json(
+            $this->authService->logout($request->user())
+        );
     }
 
-
-    public function register (Request $request){
+    public function register(Request $request)
+    {
         try {
             $data = $request->all();
             $data['password'] = Hash::make('password');
@@ -87,12 +41,54 @@ class AuthController extends Controller
                 'message' => "User Created Successfully",
                 'data' => $user,
             ], 201);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
 
+    public function login(LoginRequest $request)
+    {
+        try {
+
+            $response = $this->authService
+                ->login(
+                    $request->validated()
+                );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Login Successful',
+                'data' => $response,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+
+            ], 401);
+        }
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        return response()->json(
+            $this->authService
+                ->forgotPassword(
+                    $request->email
+                )
+        );
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        return response()->json(
+            $this->authService
+                ->resetPassword(
+                    $request->validated()
+                )
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 use App\Models\User;
 use App\Models\Event;
+use Illuminate\Support\Facades\Auth;
 
 
 class EventService
@@ -24,6 +25,7 @@ class EventService
     }
 
     public function createEvent (array $data){
+        $data['organizer_id'] = Auth::user()->id;
         return Event::create($data);
     }
 }
