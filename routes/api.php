@@ -38,7 +38,10 @@ Route::post( '/forgot-password',[App\Http\Controllers\API\AuthController::class,
 Route::post( '/reset-password',[App\Http\Controllers\API\AuthController::class,'resetPassword']);
 Route::post('/user/{user}/events/register',[App\Http\Controllers\EventController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/events/create',[App\Http\Controllers\EventController::class, 'create']);
+    Route::prefix('events')->group(function () {
+        Route::post('/',[App\Http\Controllers\EventController::class, 'create'])->middleware('permission:create-event'); //use gate to ensure that only organizers and admins can create events
+        Route::patch('/{event}', [App\Http\Controllers\EventController::class, 'update']);
+    });
     Route::post('logout',[App\Http\Controllers\API\AuthController::class,'logout']);
     Route::get('/profile', function (Request $request) {
         return $request->user()->profile;

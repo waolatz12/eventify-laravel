@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Services;
+
+use App\Enums\EventFormat;
 use App\Models\User;
+use App\Enums\EventStatus;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,5 +30,9 @@ class EventService
     public function createEvent (array $data){
         $data['organizer_id'] = Auth::user()->id;
         return Event::create($data);
+    }
+
+    public function updateEvent (Event $event, array $data){
+        return Event::update($event->id, $data);
     }
 }

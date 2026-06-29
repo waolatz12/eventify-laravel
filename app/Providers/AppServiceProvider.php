@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Access\Response;
+use App\Models\User;
 use App\Enums\UserRole;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,23 +23,94 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //only organizers and admins can create events
-        Gate::define('create-event', function ($user) {
-            return in_array(
-                $user->role,
-                [
-                    UserRole::ADMIN,
-                    UserRole::ORGANIZER
-                ]
-            );
-        });
+        // //only organizers and admins can create events
+        // Gate::define('create-event', function ($user) {
+        //     return in_array(
+        //         $user->role,
+        //         [
+        //             UserRole::ADMIN,
+        //             UserRole::ORGANIZER
+        //         ]
+        //     );
+        // });
 
-        Gate::define('access-admin-dashboard', function ($user){
-            return $user->role === UserRole::ADMIN;
-        });
+        Gate::define(
+            'create-event',
+            function (User $user) {
 
-        Gate::define('export-reports', function ($user){
-            return $user->role === UserRole::ADMIN;
-        });
+                if (
+                    in_array(
+                        $user->role,
+                        [
+                            // 'admin',
+                            // 'organizer'
+                            UserRole::ADMIN,
+                            UserRole::ORGANIZER
+                        ]
+                    )
+                ) {
+
+                    return Response::allow();
+                }
+
+
+                return Response::deny(
+                    'Only organizers or administrators can create events.'
+                );
+            }
+        );
+
+
+        // Gate::define('access-admin-dashboard', function ($user) {
+        //     return $user->role === UserRole::ADMIN;
+        // });
+
+        // Gate::define('export-reports', function ($user) {
+        //     return $user->role === UserRole::ADMIN;
+        // });
+
+        Gate::define(
+            'access-admin-dashboard',
+            function (User $user) {
+
+                if (
+                    $user->role === UserRole::ADMIN
+                ) {
+
+                    return Response::allow();
+                }
+
+
+                return Response::deny(
+                    'You do not have permission to access the admin dashboard.'
+                );
+            }
+        );
+
+
+
+        Gate::define(
+            'export-report',
+            function (User $user) {
+
+                if (
+                    in_array(
+                        $user->role,
+                        [
+                            UserRole::ADMIN,
+                            UserRole::ORGANIZER
+                        ]
+                    )
+                ) {
+
+                    return Response::allow();
+                }
+
+
+                return Response::deny(
+                    'Only organizers or administrators can export reports.'
+                );
+            }
+        );
     }
 }

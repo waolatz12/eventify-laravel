@@ -1,8 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
 use App\Services\EventService;
+use App\Http\Requests\Event\StoreEventRequest;
+use App\Http\Requests\Event\UpdateEventRequest;
 use App\Models\User;
+use App\Policies\EventPolicy;
+use App\Models\Event;
 
 use Illuminate\Http\Request;
 
@@ -40,20 +45,14 @@ class EventController extends Controller
 
     }
 
-    public function create (Request $request){
+    public function create (StoreEventRequest $request){
         try {
-
-            if (empty($request->title) || empty($request->date)){
-                return response()->json([
-                    'status' => 'error',
-                    'message' => "Title and Date are required fields.",
-                ], 400);
-            }
             $data = $request->all();
+            $event = $this->eventService->createEvent($data);
             return response()->json([
                 'status' => 'success',
                 'message' => "Event Created Successfully",
-                'data' => $this->eventService->createEvent($data),
+                'data' => $event,
             ], 201);
         } catch (\Exception $e){
             return response()->json([
@@ -62,6 +61,29 @@ class EventController extends Controller
             ], 500);
         }
 
+    }
+
+    public function update (UpdateEventRequest $request, Event $event){
+        try {
+
+        // $data = $request->all();
+          $this->authorize(
+            'update',
+            $event
+        );
+        $event = $this->eventService->updateEvent($event, $request->validated());
+
+        } catch (\Exception $e){
+            return response()->json([
+                'status'=> 'error',
+                'message'=> $e->getMessage()
+            ],500);
+        }
+
+    }
+
+    public function delete (DeleteEventRequest $request, Event $event){
+        
     }
 
 }
