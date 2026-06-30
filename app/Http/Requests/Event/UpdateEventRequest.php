@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\EventStatus;
+use App\Enums\EventFormat;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -46,8 +49,20 @@ class UpdateEventRequest extends FormRequest
                 'nullable',
                 'string'
             ],
+            'target_audience' => [
+                'nullable',
+                'string'
+            ],
+            'tickets_available' => [
+                'nullable',
+                'numeric'
+            ],
 
             'description' => [
+                'nullable',
+                'string'
+            ],
+            'venue' => [
                 'nullable',
                 'string'
             ],
@@ -56,6 +71,17 @@ class UpdateEventRequest extends FormRequest
                 'nullable',
                 'integer',
                 'min:1'
+            ],
+
+            'format' => [
+                'nullable',
+                'string',
+                new Enum(EventFormat::class),
+            ],
+            'status' => [
+                'nullable',
+                'string',
+                new Enum(EventStatus::class),
             ],
 
             'start_date' => [
