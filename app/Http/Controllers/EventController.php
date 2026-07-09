@@ -87,5 +87,22 @@ class EventController extends Controller
         }
     }
 
-    public function delete(DeleteEventRequest $request, Event $event) {}
+    public function delete(DeleteEventRequest $request, Event $event)
+    {
+        try {
+            $this->authorize('delete', $event);
+
+            $this->eventService->deleteEvent($event);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Event deleted successfully.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

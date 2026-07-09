@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('events')->group(function () {
         Route::post('/',[App\Http\Controllers\EventController::class, 'create'])->middleware('permission:create-event'); //use gate to ensure that only organizers and admins can create events
         Route::patch('/{event}', [App\Http\Controllers\EventController::class, 'update']);
+        Route::delete('/{event}', [App\Http\Controllers\EventController::class, 'delete']);
     });
     Route::post('logout',[App\Http\Controllers\API\AuthController::class,'logout']);
     Route::get('/profile', function (Request $request) {

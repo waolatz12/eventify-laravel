@@ -53,4 +53,9 @@ class EventService
 
         return $event->fresh();
     }
+
+    public function deleteEvent (Event $event) : void
+    {
+        $event->delete();
+    }
 }
