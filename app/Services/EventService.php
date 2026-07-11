@@ -58,4 +58,14 @@ class EventService
     {
         $event->delete();
     }
+
+    public function getEventById(Event $event) : Event
+    {
+        return $event;
+    }
+
+    public function getAllEvents ()
+    {
+        return Event::orderBy('id','desc')->get();
+    }
 }

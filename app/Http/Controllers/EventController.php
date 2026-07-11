@@ -64,6 +64,15 @@ class EventController extends Controller
         }
     }
 
+    public function getAllEvents () {
+        $events = $this->eventService->getAllEvents();
+        return response()->json([
+            'status'=> 'success',
+            'message'=> 'Data fetched successfully!',
+            'data'=> $events,
+        ], 200);
+    }
+
     public function update(UpdateEventRequest $request, Event $event)
     {
         try {
@@ -104,5 +113,15 @@ class EventController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function show (Event $event){
+        // $this->authorize('view', $event);
+        $event = $this->eventService->getEventById($event);
+        return response()->json([
+            'status' => 'success',
+            'message'=> 'Event fetched successfully!',
+            'data'=> $event
+        ], 200);
     }
 }
