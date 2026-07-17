@@ -33,7 +33,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
     Route::get('/auth/google', [App\Http\Controllers\GoogleController::class, 'googleloginpage']);
     Route::get('/auth/google/callback', [App\Http\Controllers\GoogleController::class, 'googleLoginCallback']);
-    Route::post('/register',[App\Http\Controllers\API\RegistrationController::class, 'register'])->middleware('throttle:api');
+    Route::post('/register',[App\Http\Controllers\API\RegistrationController::class, 'register'])->middleware('throttle:10,1'); //maximum of 10 request per minute
     Route::post( '/forgot-password',[App\Http\Controllers\API\AuthController::class,'forgotPassword']);
     Route::post( '/reset-password',[App\Http\Controllers\API\AuthController::class,'resetPassword']);
     Route::post('/user/{user}/events/register',[App\Http\Controllers\EventController::class, 'register']);
