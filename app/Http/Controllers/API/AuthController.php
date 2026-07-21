@@ -72,6 +72,7 @@ class AuthController extends Controller
         }
     }
 
+    //forgot password request
     public function forgotPassword(ForgotPasswordRequest $request)
     {
         return response()->json(
@@ -82,6 +83,7 @@ class AuthController extends Controller
         );
     }
 
+    //reset password that actually reset the user's password
     public function resetPassword(ResetPasswordRequest $request)
     {
         return response()->json(
