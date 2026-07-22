@@ -48,6 +48,8 @@ class AuthService
             }
         }
 
+        dd('see');
+
         $token = $user
             ->createToken('eventify-token')
             ->plainTextToken;
