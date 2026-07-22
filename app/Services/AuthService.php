@@ -36,7 +36,7 @@ class AuthService
         }
 
         $user = User::find(Auth::id());
-        dd($user);
+        // dd($user);
 
         if ($user->role != UserRole::ADMIN) {
             if (! $user->hasVerifiedEmail()) {
