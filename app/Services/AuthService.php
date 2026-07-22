@@ -39,6 +39,7 @@ class AuthService
         // dd($user);
 
         if ($user->role != UserRole::ADMIN) {
+            dd('see');
             if (! $user->hasVerifiedEmail()) {
                 throw ValidationException::withMessages([
                     'email' => [
@@ -48,7 +49,6 @@ class AuthService
             }
         }
 
-        dd('see');
 
         $token = $user
             ->createToken('eventify-token')
