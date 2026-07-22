@@ -23,7 +23,6 @@ class AuthService
 
     public function login(array $data): array
     {
-        dd('here');
         if (! Auth::attempt([
             'email' => $data['email'],
             'password' => $data['password'],
@@ -37,6 +36,7 @@ class AuthService
         }
 
         $user = User::find(Auth::id());
+        dd($user);
 
         if ($user->role != UserRole::ADMIN) {
             if (! $user->hasVerifiedEmail()) {
