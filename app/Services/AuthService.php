@@ -38,8 +38,8 @@ class AuthService
         $user = User::find(Auth::id());
         // dd($user);
 
+        dd('see');
         if ($user->role != UserRole::ADMIN) {
-            dd('see');
             if (! $user->hasVerifiedEmail()) {
                 throw ValidationException::withMessages([
                     'email' => [
