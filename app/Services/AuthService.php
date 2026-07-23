@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Enums\UserRole;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -38,8 +39,10 @@ class AuthService
         $user = User::find(Auth::id());
         // dd($user);
 
+        // $userRole = UserRole::from(strtolower($user->role->value));
+        $userRole = $user->role;
         // dd('see');
-        if ($user->role != UserRole::ADMIN) {
+        if ($userRole != UserRole::ADMIN) {
             if (! $user->hasVerifiedEmail()) {
                 throw ValidationException::withMessages([
                     'email' => [
