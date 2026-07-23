@@ -39,15 +39,15 @@ class AuthService
         // dd($user);
 
         // dd('see');
-        // if ($user->role != UserRole::ADMIN) {
-        //     if (! $user->hasVerifiedEmail()) {
-        //         throw ValidationException::withMessages([
-        //             'email' => [
-        //                 'Please verify your email.'
-        //             ]
-        //         ]);
-        //     }
-        // }
+        if ($user->role != UserRole::ADMIN) {
+            if (! $user->hasVerifiedEmail()) {
+                throw ValidationException::withMessages([
+                    'email' => [
+                        'Please verify your email.'
+                    ]
+                ]);
+            }
+        }
 
 
         $token = $user
