@@ -49,8 +49,10 @@ class EventController extends Controller
     public function create(StoreEventRequest $request)
     {
         try {
-            $data = $request->all();
-            $event = $this->eventService->createEvent($data);
+            // $data = $request->validated();
+            // dd($request->validated());
+            // dd('here');
+            $event = $this->eventService->createEvent($request->validated());
             return response()->json([
                 'status' => 'success',
                 'message' => "Event Created Successfully",

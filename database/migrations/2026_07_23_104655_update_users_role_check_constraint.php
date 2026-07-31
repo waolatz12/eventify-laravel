@@ -11,13 +11,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-                DB::statement("
-        ALTER TABLE users
-            DROP CONSTRAINT users_role_check;
-        ");
-    }
+    // public function up(): void
+    // {
+    //             DB::statement("
+    //     ALTER TABLE users
+    //         DROP CONSTRAINT users_role_check;
+    //     ");
+    // }
 
     /**
      * Reverse the migrations.
