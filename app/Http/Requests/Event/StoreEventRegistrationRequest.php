@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Ticket;
+namespace App\Http\Requests\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTicketRequest extends FormRequest
+class StoreEventRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,12 +22,11 @@ class StoreTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','string'],
-            'description' => ['required','string'],
-            'quantity' => ['required', 'numeric','min:1'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'sale_start' => ['required', 'date'],
-            'sale_end' => ['required', 'date'],
+            'ticket_id' => ['required', 'numeric', 'exists:tickets,id'],
+            'slug' => ['required', 'string', 'unique:events,slug'],
+            'description' => ['required', 'string'],
+            'venue' => ['required', 'string'],
+            'date' => ['required', 'date'],
         ];
     }
 }

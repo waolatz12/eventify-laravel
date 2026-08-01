@@ -10,13 +10,12 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class EmailVerificationController extends Controller
 {
-    public function verify(
+    public function verifyOld(
         // EmailVerificationRequest $request
         Request $request,
         $id,
         $hash
-    )
-    {
+    ) {
         $user = User::findOrFail($id);
 
         if (! hash_equals(
@@ -38,6 +37,15 @@ class EmailVerificationController extends Controller
 
         return response()->json([
             'message' => 'Email verified successfully'
+        ]);
+    }
+
+    public function verify(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return response()->json([
+            'message' => 'Email verified successfully',
         ]);
     }
 }

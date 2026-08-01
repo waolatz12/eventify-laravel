@@ -20,9 +20,12 @@ class TicketService
 
         // Assumes Event model has a hasMany relationship: public function tickets()
         return $event->tickets()->create([
-            'name' => $data['name'],
+            'title' => $data['title'],
             'price' => $data['price'],
             'quantity' => $data['quantity'],
+            'description' => $data['description'],
+            'sale_start' => $data['sale_start'],
+            'sale_end' => $data['sale_end'],
         ]);
     }
 }

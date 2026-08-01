@@ -41,7 +41,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('events')->group(function () {
             Route::post('/',[App\Http\Controllers\EventController::class, 'create'])->middleware('permission:create-event'); //use gate to ensure that only organizers and admins can create events
             Route::get('/', [App\Http\Controllers\EventController::class, 'getAllEvents']);
-            Route::post('/{event}/tickets', [App\Http\Controllers\TicketController::class, 'store']);
+            Route::post('/{event}/tickets', [App\Http\Controllers\TicketController::class, 'store']); //create ticket
             Route::patch('/{event}', [App\Http\Controllers\EventController::class, 'update']);
             Route::delete('/{event}', [App\Http\Controllers\EventController::class, 'delete']);
             Route::get('/{event}', [App\Http\Controllers\EventController::class, 'show']);
