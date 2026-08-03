@@ -126,32 +126,32 @@ class AppServiceProvider extends ServiceProvider
             }
         );
 
-        // 2. Add the custom verification URL logic directly underneath
-        VerifyEmail::createUrlUsing(function ($notifiable) {
-            $frontendUrl = config('app.frontend_url') ?? 'https://frontend.test';
+        // // 2. Add the custom verification URL logic directly underneath
+        // VerifyEmail::createUrlUsing(function ($notifiable) {
+        //     $frontendUrl = config('app.frontend_url') ?? 'https://frontend.test';
 
-            $verifyUrl = URL::temporarySignedRoute(
-                'verification.verify',
-                now()->addMinutes(config('auth.verification.expire', 60)),
-                [
-                    'id' => $notifiable->getKey(),
-                    'hash' => sha1($notifiable->getEmailForVerification()),
-                ]
-            );
+        //     $verifyUrl = URL::temporarySignedRoute(
+        //         'verification.verify',
+        //         now()->addMinutes(config('auth.verification.expire', 60)),
+        //         [
+        //             'id' => $notifiable->getKey(),
+        //             'hash' => sha1($notifiable->getEmailForVerification()),
+        //         ]
+        //     );
 
-            $signature = parse_url($verifyUrl, PHP_URL_QUERY);
+        //     $signature = parse_url($verifyUrl, PHP_URL_QUERY);
 
-            return "{$frontendUrl}/email-verify?{$signature}";
-        });
+        //     return "{$frontendUrl}/email-verify?{$signature}";
+        // });
 
-        // 2. (NEW) Direct Laravel to use your custom HTML blade template
-        VerifyEmail::toMailUsing(function ($notifiable, $url) {
-            return (new MailMessage)
-                ->subject('Verify Your Eventify Account') // Custom subject line
-                ->view('emails.verify-email', [
-                    'url' => $url, // The custom SPA URL generated above
-                    'user' => $notifiable // The User model instance
-                ]);
-        });
+        // // 2. (NEW) Direct Laravel to use your custom HTML blade template
+        // VerifyEmail::toMailUsing(function ($notifiable, $url) {
+        //     return (new MailMessage)
+        //         ->subject('Verify Your Eventify Account') // Custom subject line
+        //         ->view('emails.verify-email', [
+        //             'url' => $url, // The custom SPA URL generated above
+        //             'user' => $notifiable // The User model instance
+        //         ]);
+        // });
     }
 }
