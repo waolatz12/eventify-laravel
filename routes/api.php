@@ -58,7 +58,7 @@ Route::prefix('v1')->group(function () {
 
         // 5. Perfect for API: Return a JSON success response
         return response()->json(['message' => 'Email verified successfully!']);
-    })->middleware(['signed'])->name('v1.verification.verify');
+    })->middleware(['signed'])->name('verification.verify');
 
     Route::post('/email/resend', [App\Http\Controllers\API\RegistrationController::class, 'resendVerification']);
 
