@@ -6,59 +6,38 @@ use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
-//verify the email
-// Route::get('/email/verify/{id}/{hash}', function (
-//     EmailVerificationRequest $request
-// ) {
-//     $request->fulfill();
+// Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
 
-//     return response()->json([
-//         'message' => 'Email verified successfully'
-//     ]);
-// })->middleware([
-//     'auth:sanctum',
-//     'signed'
-// ])->name('verification.verify');
+//     // 1. Manually fetch the user from the route parameter
+//     $user = User::findOrFail($id);
+
+//     // 2. Cryptographically verify the signature hasn't been altered or expired
+//     if (! $request->hasValidSignature()) {
+//         return response()->json(['message' => 'Invalid or expired verification link.'], 403);
+//     }
+
+//     // 3. Verify that the email hash matches the user's current email
+//     if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+//         return response()->json(['message' => 'Invalid verification hash.'], 403);
+//     }
+
+//     // 4. Mark as verified if they aren't already
+//     if ($user->hasVerifiedEmail()) {
+//         return response()->json(['message' => 'Email is already verified.']);
+//     }
+
+//     if ($user->markEmailAsVerified()) {
+//         event(new Verified($user)); // Fire Laravel's core verification events
+//     }
+
+//     // 5. Perfect for API: Return a JSON success response
+//     return response()->json(['message' => 'Email verified successfully!']);
+// })->middleware(['signed'])->name('verification.verify');
+
 Route::prefix('v1')->group(function () {
-    // Route::get(
-    //     '/email/verify/{id}/{hash}',
-    //     [App\Http\Controllers\API\EmailVerificationController::class, 'verify']
-    // )
-    // ->middleware(['signed'])
-    // ->name('verification.verify');
-    // Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-
-    //     $request->fulfill();
-    //     return response()->json(['message' => 'Email verified successfully.']);
-    // })->middleware(['signed'])->name('verification.verify'); // Signed middleware protects tampering
-
-    Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-
-        // 1. Manually fetch the user from the route parameter
-        $user = User::findOrFail($id);
-
-        // 2. Cryptographically verify the signature hasn't been altered or expired
-        if (! $request->hasValidSignature()) {
-            return response()->json(['message' => 'Invalid or expired verification link.'], 403);
-        }
-
-        // 3. Verify that the email hash matches the user's current email
-        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-            return response()->json(['message' => 'Invalid verification hash.'], 403);
-        }
-
-        // 4. Mark as verified if they aren't already
-        if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email is already verified.']);
-        }
-
-        if ($user->markEmailAsVerified()) {
-            event(new Verified($user)); // Fire Laravel's core verification events
-        }
-
-        // 5. Perfect for API: Return a JSON success response
-        return response()->json(['message' => 'Email verified successfully!']);
-    })->middleware(['signed'])->name('verification.verify');
+    Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\API\EmailVerificationController::class, 'verify'])
+        ->middleware(['signed'])
+        ->name('verification.verify');
 
     Route::post('/email/resend', [App\Http\Controllers\API\RegistrationController::class, 'resendVerification']);
 
