@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Services;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
@@ -18,7 +20,8 @@ class RegistrationService
     }
 
 
-    public function register (array $data){
+    public function register(array $data)
+    {
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -28,7 +31,8 @@ class RegistrationService
         ]);
 
         try {
-            $user->sendEmailVerificationNotification();
+            // $user->sendEmailVerificationNotification();
+            event(new Registered($user));
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
         }
@@ -38,8 +42,7 @@ class RegistrationService
 
     public function resendVerification(
         string $email
-    )
-    {
+    ) {
         $user = User::where(
             'email',
             $email
@@ -55,7 +58,7 @@ class RegistrationService
 
             return response()->json([
                 'message' =>
-                    'Email already verified'
+                'Email already verified'
             ]);
         }
 
@@ -63,7 +66,7 @@ class RegistrationService
 
         return response()->json([
             'message' =>
-                'Verification email sent'
-            ]);
+            'Verification email sent'
+        ]);
     }
 }
