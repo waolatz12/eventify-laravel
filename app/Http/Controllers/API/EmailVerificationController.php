@@ -42,15 +42,15 @@ class EmailVerificationController extends Controller
         ]);
     }
 
-    public function verifyoo(EmailVerificationRequest $request)
+    public function verify22(EmailVerificationRequest $request)
     {
-        dd([
-            'full_url' => $request->fullUrl(),
-            'has_valid_signature' => $request->hasValidSignature(),
-            'route' => $request->route()->uri(),
-            'host' => $request->getHost(),
-            'scheme' => $request->getScheme(),
-        ]);
+        // dd([
+        //     'full_url' => $request->fullUrl(),
+        //     'has_valid_signature' => $request->hasValidSignature(),
+        //     'route' => $request->route()->uri(),
+        //     'host' => $request->getHost(),
+        //     'scheme' => $request->getScheme(),
+        // ]);
         $request->fulfill();
 
         return response()->json([
